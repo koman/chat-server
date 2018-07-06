@@ -12,7 +12,7 @@ import com.bmw.chat.server.utils.Destinations;
 import com.bmw.chat.server.utils.SystemMessages;
 
 @Service
-public class RedisChatRoomService implements ChatRoomService {
+public class RedisChatRoomService {
 
 	@Autowired
 	private SimpMessagingTemplate webSocketMessagingTemplate;
@@ -20,17 +20,14 @@ public class RedisChatRoomService implements ChatRoomService {
 	@Autowired
 	private ChatRoomRepository chatRoomRepository;
 
-	@Override
 	public ChatRoom save(ChatRoom chatRoom) {
 		return chatRoomRepository.save(chatRoom);
 	}
 
-	@Override
 	public ChatRoom findById(String chatRoomId) {
-		return chatRoomRepository.findById(chatRoomId).get();
+		return chatRoomRepository.findOne(chatRoomId);
 	}
 
-	@Override
 	public ChatRoom join(ChatRoomUser joiningUser, ChatRoom chatRoom) {
 		chatRoom.addUser(joiningUser);
 		chatRoomRepository.save(chatRoom);
@@ -40,7 +37,6 @@ public class RedisChatRoomService implements ChatRoomService {
 		return chatRoom;
 	}
 
-	@Override
 	public ChatRoom leave(ChatRoomUser leavingUser, ChatRoom chatRoom) {
 		sendPublicMessage(SystemMessages.goodbye(chatRoom.getId(), leavingUser.getUsername()));
 		
@@ -51,19 +47,16 @@ public class RedisChatRoomService implements ChatRoomService {
 		return chatRoom;
 	}
 
-	@Override
 	public void sendPublicMessage(InstantMessage instantMessage) {
 		webSocketMessagingTemplate.convertAndSend(Destinations.ChatRoom.publicMessages(instantMessage.getChatRoomId()), instantMessage);
 	}
 
-	@Override
 	public void sendPrivateMessage(InstantMessage instantMessage) {
 		webSocketMessagingTemplate.convertAndSendToUser(instantMessage.getToUser(),Destinations.ChatRoom.privateMessages(instantMessage.getChatRoomId()), instantMessage);
 		
 		webSocketMessagingTemplate.convertAndSendToUser(instantMessage.getFromUser(),Destinations.ChatRoom.privateMessages(instantMessage.getChatRoomId()), instantMessage);
 	}
 
-	@Override
 	public List<ChatRoom> findAll() {
 		return (List<ChatRoom>) chatRoomRepository.findAll();
 	}
