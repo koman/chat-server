@@ -14,23 +14,23 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @EnableWebSocketMessageBroker
 public class WebSocketConfigSpringSession extends AbstractSessionWebSocketMessageBrokerConfigurer<ExpiringSession> {
 
-	@Value("${bmw.chat.relay.host}")
-	private String relayHost;
+    @Value("${bmw.chat.relay.host}")
+    private String relayHost;
 
-	@Value("${bmw.chat.relay.port}")
-	private Integer relayPort;
+    @Value("${bmw.chat.relay.port}")
+    private Integer relayPort;
 
-	protected void configureStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/ws").withSockJS();
-	}
+    protected void configureStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws").withSockJS();
+    }
 
-	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		registry.enableStompBrokerRelay("/queue/", "/topic/")
-			.setUserDestinationBroadcast("/topic/unresolved.user.dest")
-			.setUserRegistryBroadcast("/topic/registry.broadcast")
-			.setRelayHost(relayHost)
-			.setRelayPort(relayPort);
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableStompBrokerRelay("/queue/", "/topic/")
+                .setUserDestinationBroadcast("/topic/unresolved.user.dest")
+                .setUserRegistryBroadcast("/topic/registry.broadcast")
+                .setRelayHost(relayHost)
+                .setRelayPort(relayPort);
 
-		registry.setApplicationDestinationPrefixes("/chatroom");
-	}
+        registry.setApplicationDestinationPrefixes("/chatroom");
+    }
 }

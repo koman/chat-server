@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.bmw</groupId>
-    <artifactId>chat</artifactId>
+    <artifactId>bmw-chat</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.3.RELEASE</version>
+        <version>1.5.14.RELEASE</version>
         <relativePath />
     </parent>
 
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
+        </dependency>        
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -57,7 +57,6 @@
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-net</artifactId>
-            <version>2.0.8.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
@@ -68,6 +67,10 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-transport-native-epoll</artifactId>
             <version>4.1.7.Final</version>
+        </dependency>        
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 
