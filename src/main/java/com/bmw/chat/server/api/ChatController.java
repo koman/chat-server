@@ -10,15 +10,15 @@ import com.bmw.chat.server.chatroom.domain.service.ChatRoomService;
 
 @Controller
 public class ChatController {
-	
-	@Autowired
-	private ChatRoomService chatRoomService;
-	
+
+    @Autowired
+    private ChatRoomService chatRoomService;
+
     @RequestMapping("/chat")
     public ModelAndView getRooms() {
-    	ModelAndView modelAndView = new ModelAndView("chat");
-    	List<ChatRoom> chatRooms = chatRoomService.findAll();
-    	modelAndView.addObject("chatRooms", chatRooms);
-    	return modelAndView;
+        ModelAndView modelAndView = new ModelAndView("chat");
+        List<ChatRoom> chatRooms = chatRoomService.findAll();
+        modelAndView.addObject("chatRooms", chatRooms);
+        return modelAndView;
     }
 }

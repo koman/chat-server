@@ -20,9 +20,6 @@ public class RedisChatRoomService implements ChatRoomService {
 	@Autowired
 	private ChatRoomRepository chatRoomRepository;
 
-//	@Autowired
-//	private InstantMessageService instantMessageService;
-
 	@Override
 	public ChatRoom save(ChatRoom chatRoom) {
 		return chatRoomRepository.save(chatRoom);
@@ -30,7 +27,7 @@ public class RedisChatRoomService implements ChatRoomService {
 
 	@Override
 	public ChatRoom findById(String chatRoomId) {
-		return chatRoomRepository.findOne(chatRoomId);
+		return chatRoomRepository.findById(chatRoomId).get();
 	}
 
 	@Override
@@ -56,26 +53,14 @@ public class RedisChatRoomService implements ChatRoomService {
 
 	@Override
 	public void sendPublicMessage(InstantMessage instantMessage) {
-		webSocketMessagingTemplate.convertAndSend(
-				Destinations.ChatRoom.publicMessages(instantMessage.getChatRoomId()),
-				instantMessage);
-
-//		instantMessageService.appendInstantMessageToConversations(instantMessage);
+		webSocketMessagingTemplate.convertAndSend(Destinations.ChatRoom.publicMessages(instantMessage.getChatRoomId()), instantMessage);
 	}
 
 	@Override
 	public void sendPrivateMessage(InstantMessage instantMessage) {
-		webSocketMessagingTemplate.convertAndSendToUser(
-				instantMessage.getToUser(),
-				Destinations.ChatRoom.privateMessages(instantMessage.getChatRoomId()), 
-				instantMessage);
+		webSocketMessagingTemplate.convertAndSendToUser(instantMessage.getToUser(),Destinations.ChatRoom.privateMessages(instantMessage.getChatRoomId()), instantMessage);
 		
-		webSocketMessagingTemplate.convertAndSendToUser(
-				instantMessage.getFromUser(),
-				Destinations.ChatRoom.privateMessages(instantMessage.getChatRoomId()), 
-				instantMessage);
-
-//		instantMessageService.appendInstantMessageToConversations(instantMessage);
+		webSocketMessagingTemplate.convertAndSendToUser(instantMessage.getFromUser(),Destinations.ChatRoom.privateMessages(instantMessage.getChatRoomId()), instantMessage);
 	}
 
 	@Override
@@ -84,8 +69,6 @@ public class RedisChatRoomService implements ChatRoomService {
 	}
 	
 	private void updateConnectedUsersViaWebSocket(ChatRoom chatRoom) {
-		webSocketMessagingTemplate.convertAndSend(
-				Destinations.ChatRoom.connectedUsers(chatRoom.getId()),
-				chatRoom.getConnectedUsers());
+		webSocketMessagingTemplate.convertAndSend(Destinations.ChatRoom.connectedUsers(chatRoom.getId()),chatRoom.getConnectedUsers());
 	}
 }
