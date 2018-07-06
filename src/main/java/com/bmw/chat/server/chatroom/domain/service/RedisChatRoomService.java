@@ -14,78 +14,71 @@ import com.bmw.chat.server.utils.SystemMessages;
 @Service
 public class RedisChatRoomService implements ChatRoomService {
 
-	@Autowired
-	private SimpMessagingTemplate webSocketMessagingTemplate;
+    @Autowired
+    private SimpMessagingTemplate webSocketMessagingTemplate;
 
-	@Autowired
-	private ChatRoomRepository chatRoomRepository;
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
 
-//	@Autowired
-//	private InstantMessageService instantMessageService;
+    @Override
+    public ChatRoom save(ChatRoom chatRoom) {
+        return chatRoomRepository.save(chatRoom);
+    }
 
-	@Override
-	public ChatRoom save(ChatRoom chatRoom) {
-		return chatRoomRepository.save(chatRoom);
-	}
+    @Override
+    public ChatRoom findById(String chatRoomId) {
+        return chatRoomRepository.findById(chatRoomId).get();
+    }
 
-	@Override
-	public ChatRoom findById(String chatRoomId) {
-		return chatRoomRepository.findOne(chatRoomId);
-	}
+    @Override
+    public ChatRoom join(ChatRoomUser joiningUser, ChatRoom chatRoom) {
+        chatRoom.addUser(joiningUser);
+        chatRoomRepository.save(chatRoom);
 
-	@Override
-	public ChatRoom join(ChatRoomUser joiningUser, ChatRoom chatRoom) {
-		chatRoom.addUser(joiningUser);
-		chatRoomRepository.save(chatRoom);
+        sendPublicMessage(SystemMessages.welcome(chatRoom.getId(), joiningUser.getUsername()));
+        updateConnectedUsersViaWebSocket(chatRoom);
+        return chatRoom;
+    }
 
-		sendPublicMessage(SystemMessages.welcome(chatRoom.getId(), joiningUser.getUsername()));
-		updateConnectedUsersViaWebSocket(chatRoom);
-		return chatRoom;
-	}
+    @Override
+    public ChatRoom leave(ChatRoomUser leavingUser, ChatRoom chatRoom) {
+        sendPublicMessage(SystemMessages.goodbye(chatRoom.getId(), leavingUser.getUsername()));
 
-	@Override
-	public ChatRoom leave(ChatRoomUser leavingUser, ChatRoom chatRoom) {
-		sendPublicMessage(SystemMessages.goodbye(chatRoom.getId(), leavingUser.getUsername()));
-		
-		chatRoom.removeUser(leavingUser);
-		chatRoomRepository.save(chatRoom);
-		
-		updateConnectedUsersViaWebSocket(chatRoom);
-		return chatRoom;
-	}
+        chatRoom.removeUser(leavingUser);
+        chatRoomRepository.save(chatRoom);
 
-	@Override
-	public void sendPublicMessage(InstantMessage instantMessage) {
-		webSocketMessagingTemplate.convertAndSend(
-				Destinations.ChatRoom.publicMessages(instantMessage.getChatRoomId()),
-				instantMessage);
+        updateConnectedUsersViaWebSocket(chatRoom);
+        return chatRoom;
+    }
 
-//		instantMessageService.appendInstantMessageToConversations(instantMessage);
-	}
+    @Override
+    public void sendPublicMessage(InstantMessage instantMessage) {
+        webSocketMessagingTemplate.convertAndSend(
+                Destinations.ChatRoom.publicMessages(instantMessage.getChatRoomId()),
+                instantMessage);
+    }
 
-	@Override
-	public void sendPrivateMessage(InstantMessage instantMessage) {
-		webSocketMessagingTemplate.convertAndSendToUser(
-				instantMessage.getToUser(),
-				Destinations.ChatRoom.privateMessages(instantMessage.getChatRoomId()), 
-				instantMessage);
-		
-		webSocketMessagingTemplate.convertAndSendToUser(
-				instantMessage.getFromUser(),
-				Destinations.ChatRoom.privateMessages(instantMessage.getChatRoomId()), 
-				instantMessage);
+    @Override
+    public void sendPrivateMessage(InstantMessage instantMessage) {
+        webSocketMessagingTemplate.convertAndSendToUser(
+                instantMessage.getToUser(),
+                Destinations.ChatRoom.privateMessages(instantMessage.getChatRoomId()),
+                instantMessage);
 
-//		instantMessageService.appendInstantMessageToConversations(instantMessage);
-	}
+        webSocketMessagingTemplate.convertAndSendToUser(
+                instantMessage.getFromUser(),
+                Destinations.ChatRoom.privateMessages(instantMessage.getChatRoomId()),
+                instantMessage);
+    }
 
-	@Override
-	public List<ChatRoom> findAll() {
-		return (List<ChatRoom>) chatRoomRepository.findAll();
-	}
-	
-	private void updateConnectedUsersViaWebSocket(ChatRoom chatRoom) {
-		webSocketMessagingTemplate.convertAndSend(
-				Destinations.ChatRoom.connectedUsers(chatRoom.getId()),
-				chatRoom.getConnectedUsers());
-	}
+    @Override
+    public List<ChatRoom> findAll() {
+        return (List<ChatRoom>) chatRoomRepository.findAll();
+    }
+
+    private void updateConnectedUsersViaWebSocket(ChatRoom chatRoom) {
+        webSocketMessagingTemplate.convertAndSend(
+                Destinations.ChatRoom.connectedUsers(chatRoom.getId()),
+                chatRoom.getConnectedUsers());
+    }
 }

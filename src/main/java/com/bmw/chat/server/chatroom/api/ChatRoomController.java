@@ -30,10 +30,6 @@ public class ChatRoomController {
 	@Autowired
 	private ChatRoomService chatRoomService;
 
-//	@Autowired
-//	private InstantMessageService instantMessageService;
-
-//	@Secured("ROLE_ADMIN")
 	@RequestMapping(path = "/chatroom", method = RequestMethod.POST)
 	@ResponseBody
 	@ResponseStatus(code = HttpStatus.CREATED)
@@ -57,7 +53,6 @@ public class ChatRoomController {
 	@SubscribeMapping("/old.messages")
 	public List<InstantMessage> listOldMessagesFromUserOnSubscribe(Principal principal, SimpMessageHeaderAccessor headerAccessor) {
 		String chatRoomId = headerAccessor.getSessionAttributes().get("chatRoomId").toString();
-//		return instantMessageService.findAllInstantMessagesFor(principal.getName(), chatRoomId);
 		return Collections.EMPTY_LIST;
 	}
 
@@ -67,10 +62,6 @@ public class ChatRoomController {
 		instantMessage.setFromUser(principal.getName());
 		instantMessage.setChatRoomId(chatRoomId);
 
-//		if (instantMessage.isPublic()) {
-//			chatRoomService.sendPublicMessage(instantMessage);
-//		} else {
 			chatRoomService.sendPrivateMessage(instantMessage);
-//		}
 	}
 }
