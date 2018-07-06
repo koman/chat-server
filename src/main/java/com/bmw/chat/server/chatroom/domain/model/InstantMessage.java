@@ -1,27 +1,42 @@
 package com.bmw.chat.server.chatroom.domain.model;
 
-
-import lombok.Data;
-
-@Data
 public class InstantMessage {
-	
-	private String chatRoomId;
-	private String fromUser;
-	private String toUser;
-	private String text;
-//
-//	public InstantMessage() {
-//		this.date = new Date();
-//	}
-//
-//	public boolean isPublic() {
-//		return Strings.isNullOrEmpty(this.toUser);
-//	}
-//	public boolean isFromAdmin() {
-//		return this.fromUser.equals(SystemUsers.ADMIN.getUsername());
-//	}
-//	public void appendToUserConversation(String username) {
-//		this.username = username;
-//	}
+
+    private String chatRoomId;
+    private String fromUser;
+    private String toUser;
+    private String text;
+
+    public String getChatRoomId() {
+        return chatRoomId;
+    }
+
+    public void setChatRoomId(String chatRoomId) {
+        this.chatRoomId = chatRoomId;
+    }
+
+    public String getFromUser() {
+        return fromUser;
+    }
+
+    public void setFromUser(String fromUser) {
+        this.fromUser = fromUser;
+    }
+
+    public String getToUser() {
+        return toUser;
+    }
+
+    public void setToUser(String toUser) {
+        this.toUser = toUser;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
 }
