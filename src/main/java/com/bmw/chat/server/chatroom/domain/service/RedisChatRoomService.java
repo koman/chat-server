@@ -27,7 +27,7 @@ public class RedisChatRoomService implements ChatRoomService {
 
     @Override
     public ChatRoom findById(String chatRoomId) {
-        return chatRoomRepository.findById(chatRoomId).get();
+        return chatRoomRepository.findOne(chatRoomId);
     }
 
     @Override
