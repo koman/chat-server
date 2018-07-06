@@ -10,3 +10,7 @@ services:
      - "6572:5672"
      - "15672:15672"
      - "61613:61613"
+  bmw-chat:
+    image: "bmwdockerregistry.azurecr.io/bmw-chat"
+    ports:
+      - "9000:9000"
