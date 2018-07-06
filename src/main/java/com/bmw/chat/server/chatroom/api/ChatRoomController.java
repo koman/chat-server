@@ -22,13 +22,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bmw.chat.server.chatroom.domain.model.ChatRoom;
 import com.bmw.chat.server.chatroom.domain.model.ChatRoomUser;
 import com.bmw.chat.server.chatroom.domain.model.InstantMessage;
-import com.bmw.chat.server.chatroom.domain.service.ChatRoomService;
+import com.bmw.chat.server.chatroom.domain.service.RedisChatRoomService;
 
 @Controller
 public class ChatRoomController {
 
 	@Autowired
-	private ChatRoomService chatRoomService;
+	private RedisChatRoomService chatRoomService;
 
 	@RequestMapping(path = "/chatroom", method = RequestMethod.POST)
 	@ResponseBody

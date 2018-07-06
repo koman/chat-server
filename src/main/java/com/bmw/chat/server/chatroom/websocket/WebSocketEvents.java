@@ -8,13 +8,13 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.bmw.chat.server.chatroom.domain.model.ChatRoomUser;
-import com.bmw.chat.server.chatroom.domain.service.ChatRoomService;
+import com.bmw.chat.server.chatroom.domain.service.RedisChatRoomService;
 
 @Component
 public class WebSocketEvents {
 
 	@Autowired
-	private ChatRoomService chatRoomService;
+	private RedisChatRoomService chatRoomService;
 	
 	@EventListener
 	private void handleSessionConnected(SessionConnectEvent event) {
