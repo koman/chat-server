@@ -7,10 +7,10 @@ services:
   rabbitmq-stomp:
     image: "jorgeacetozi/rabbitmq-stomp:3.6"
     ports:
-     - "6572:5672"
+     - "5672:5672"
      - "15672:15672"
      - "61613:61613"
   bmw-chat:
-    image: "bmwdockerregistry.azurecr.io/bmw-chat"
+    image: "bmwdockerregistry.azurecr.io/chat-server:2"
     ports:
-      - "9000:9000"
+      - "8080:8080"
